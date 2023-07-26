@@ -6,6 +6,9 @@ import com.example.springboot.warrenty.dto.WarrantyTypeDTO;
 import com.example.springboot.warrenty.service.WarrantyTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,6 +68,12 @@ public class WarrantyTypeServiceImpl implements WarrantyTypeService {
         } else {
             throw new RuntimeException("warrantyDTO cannot be null!");
         }
+    }
+
+    @Override
+    public Page<WarrantyType> returnPagination(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        return warrantyTypeRepository.findAll(pageable);
     }
 
 

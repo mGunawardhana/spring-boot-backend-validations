@@ -3,11 +3,32 @@ package com.example.springboot.common.repository;
 import com.example.springboot.common.entity.Warranty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public interface WarrantyRepository extends JpaRepository<Warranty, Integer> {
 
-    @Query(value = "SELECT warranty.id,warranty.warranty_type,warranty.warranty_provider,warranty.warranty_code,warranty.warranty_name,warranty.warranty_description,warranty.warranty_duration,GROUP_CONCAT(tac.term) AS terms,GROUP_CONCAT(tac.term_condition) AS conditions FROM warranty LEFT JOIN terms_and_conditions tac ON warranty.id = tac.warranty_id GROUP BY warranty.id", nativeQuery = true)
+//    @Query(value = "SELECT Warranty.id,Warranty .warrantyType,Warranty .warrantyProvider," +
+//            "Warranty .warrantyCode, Warranty .warrantyName,Warranty .warrantyDescription," +
+//            "Warranty .warrantyDuration,GROUP_CONCAT(tac.term) AS terms," +
+//            "GROUP_CONCAT(tac.conditions) AS conditions FROM Warranty LEFT JOIN TermsAndConditions tac ON Warranty.id = tac.id GROUP BY Warranty.id",
+//            nativeQuery = true)
+//
+    @Query(value = "SELECT warranty.id,\n" +
+            "       warranty.warranty_type,\n" +
+            "       warranty.warranty_provider,\n" +
+            "       warranty.warranty_code,\n" +
+            "       warranty.warranty_name,\n" +
+            "       warranty.warranty_description,\n" +
+            "       warranty.warranty_duration,\n" +
+            "       GROUP_CONCAT(tac.term)           AS terms,\n" +
+            "       GROUP_CONCAT(tac.term_condition) AS conditions\n" +
+            "FROM warranty\n" +
+            "         LEFT JOIN terms_and_conditions tac ON warranty.id = tac.warranty_id\n" +
+            "GROUP BY warranty.id;\n" +
+            "\n" +
+            "SELECT * FROM warranty",nativeQuery = true)
     List<Warranty> getAllWarrantyDetailsWithTermsAndConditions();
+
 }

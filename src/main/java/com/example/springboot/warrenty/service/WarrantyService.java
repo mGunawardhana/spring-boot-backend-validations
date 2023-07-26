@@ -2,7 +2,6 @@ package com.example.springboot.warrenty.service;
 
 import com.example.springboot.warrenty.dto.WarrantyDTO;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -21,5 +20,5 @@ public interface WarrantyService {
 
     void deleteWarranty(Integer code);
 
-    List<WarrantyDTO> getAllWarrantyDetails();
+    List<?> getAllWarrantyDetails();
 }

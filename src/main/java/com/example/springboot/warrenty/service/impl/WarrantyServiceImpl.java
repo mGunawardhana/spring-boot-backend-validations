@@ -83,15 +83,10 @@ public class WarrantyServiceImpl implements WarrantyService {
     }
 
     @Override
-    public List<WarrantyDTO> getAllWarrantyDetails() {
-        List<Warranty> warranties = warrantyRepository.getAllWarrantyDetailsWithTermsAndConditions();
-        List<WarrantyDTO> warrantyDTOs = new ArrayList<>();
+    public List<?> getAllWarrantyDetails() {        //TODO fix the bug here ....
 
-        for (Warranty warranty : warranties) {
-            warrantyDTOs.add(warrantyDTOModelMapper(warranty));
-        }
-
-        return warrantyDTOs;
+        return   warrantyRepository.findAll().stream().map(this::warrantyDTOModelMapper).toList();
+//        return warrantyRepository.getAllWarrantyDetailsWithTermsAndConditions().stream().map(this::warrantyDTOModelMapper).toList();
     }
 
     private WarrantyDTO warrantyDTOModelMapper(Warranty warranty) {
@@ -103,6 +98,21 @@ public class WarrantyServiceImpl implements WarrantyService {
         warrantyDTO.setWarrantyName(warranty.getWarrantyName());
         warrantyDTO.setWarrantyDescription(warranty.getWarrantyDescription());
         warrantyDTO.setWarrantyDuration(warranty.getWarrantyDuration());
+        warrantyDTO.setStatus(warranty.getStatus());
+
+        //TODO fix the bug here ....
+//
+//        List<TermsAndConditions> termsAndConditionsDTOList = new ArrayList<>();
+//        for (TermsAndConditions termsAndConditions:warranty.getTermsAndConditions()){
+//            TermsAndConditionsDTO termsAndConditions1 = new TermsAndConditionsDTO();
+//            termsAndConditions1.setId(termsAndConditions.getId());
+//            termsAndConditions1.setTerm(termsAndConditions.getTerm());
+//            termsAndConditions1.setConditions(termsAndConditions.getConditions());
+//            termsAndConditions1.setStatus(termsAndConditions.getStatus());
+//            termsAndConditions1.setWarranty(termsAndConditions.getWarranty());
+//            termsAndConditionsDTOList.add(termsAndConditions1);
+//        }
+
         warrantyDTO.setTermsAndConditions(warranty.getTermsAndConditions());
         return warrantyDTO;
     }
