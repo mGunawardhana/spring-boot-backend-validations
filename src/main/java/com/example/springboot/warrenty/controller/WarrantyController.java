@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * Interface for Receipt service layer.
+ * Warranty controller.
  *
  * @author Maneesha
  */

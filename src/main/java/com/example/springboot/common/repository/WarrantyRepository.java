@@ -6,6 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+/**
+ * Warranty repository
+ *
+ * @author Maneesha
+ */
+
 @Repository
 public interface WarrantyRepository extends JpaRepository<Warranty, Integer> {
 

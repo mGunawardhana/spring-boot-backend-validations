@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Interface for Receipt service layer.
+ * Warranty provider service impl
  *
  * @author Maneesha
  */
@@ -22,6 +22,9 @@ public class WarrantyProviderServiceImpl implements WarrantyProviderService {
     @Autowired
     WarrantyProviderRepository warrantyProviderRepository;
 
+    /**
+     * save warranty provider with checking validations
+     */
     @Override
     public void saveWarrantyProvider(WarrantyProviderDTO warrantyProviderDTO) {
         if (warrantyProviderDTO != null) {
@@ -39,17 +42,27 @@ public class WarrantyProviderServiceImpl implements WarrantyProviderService {
         }
     }
 
+    /**
+     * get all warranty providers
+     */
     @Override
     public List<WarrantyProviderDTO> getAllWarrantyTypeDetails() {
         return warrantyProviderRepository.findAll().stream().map(this::warrantyProviderDTOModalMapper).toList();
     }
 
+    /**
+     * update warranty type
+     */
     @Override
     public void updateWarrantyType(WarrantyProviderDTO warrantyProviderDTO) {
 
     }
 
-    private WarrantyProviderDTO warrantyProviderDTOModalMapper(WarrantyProvider warrantyProvider){
+
+    /**
+     * warranty provider -> warranty provider dto
+     */
+    private WarrantyProviderDTO warrantyProviderDTOModalMapper(WarrantyProvider warrantyProvider) {
         WarrantyProviderDTO warrantyProviderDTO = new WarrantyProviderDTO();
         warrantyProviderDTO.setId(warrantyProvider.getId());
         warrantyProviderDTO.setCreatedAt(warrantyProvider.getCreatedAt());
@@ -58,6 +71,9 @@ public class WarrantyProviderServiceImpl implements WarrantyProviderService {
         return warrantyProviderDTO;
     }
 
+    /**
+     * warranty provider dto -> warranty provider
+     */
     private WarrantyProvider warrantyProviderEntityModelMapper(WarrantyProviderDTO warrantyProviderDTO) {
         WarrantyProvider warrantyProvider = new WarrantyProvider();
         warrantyProvider.setId(warrantyProviderDTO.getId());

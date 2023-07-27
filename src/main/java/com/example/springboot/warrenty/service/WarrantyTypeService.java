@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Interface for Receipt service layer.
+ * warranty type service
  *
  * @author Maneesha
  */

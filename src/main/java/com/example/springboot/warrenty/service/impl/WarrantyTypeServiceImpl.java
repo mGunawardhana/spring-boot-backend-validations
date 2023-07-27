@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Interface for Receipt service layer.
+ * Interface for warranty type service layer.
  *
  * @author Maneesha
  */
@@ -25,6 +25,9 @@ public class WarrantyTypeServiceImpl implements WarrantyTypeService {
     @Autowired
     WarrantyTypeRepository warrantyTypeRepository;
 
+    /**
+     * save warranty type with validations
+     */
     @Override
     public void saveWarrantyType(WarrantyTypeDTO warrantyTypeDTO) {
         if (warrantyTypeDTO != null) {
@@ -44,15 +47,20 @@ public class WarrantyTypeServiceImpl implements WarrantyTypeService {
         } else {
             throw new IllegalArgumentException("WarrantyTypeDTO cannot be null.");
         }
-
-
     }
 
+    /**
+     * get all warranty detail types
+     */
     @Override
     public List<WarrantyTypeDTO> getAllWarrantyTypeDetails() {
         return warrantyTypeRepository.findAll().stream().map(this::warrantyTypeDTOModalMapper).toList();
     }
 
+
+    /**
+     * update warranty type with validations
+     */
     @Override
     public void updateWarrantyType(WarrantyTypeDTO warrantyTypeDTO) {
         if (warrantyTypeDTO != null) {
@@ -70,13 +78,18 @@ public class WarrantyTypeServiceImpl implements WarrantyTypeService {
         }
     }
 
+    /**
+     * pagination management
+     */
     @Override
     public Page<WarrantyType> returnPagination(Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return warrantyTypeRepository.findAll(pageable);
     }
 
-
+    /**
+     * warranty type -> warranty dto
+     */
     private WarrantyTypeDTO warrantyTypeDTOModalMapper(WarrantyType warrantyType) {
         WarrantyTypeDTO warrantyTypeDTO = new WarrantyTypeDTO();
         warrantyTypeDTO.setId(warrantyType.getId());
@@ -86,7 +99,9 @@ public class WarrantyTypeServiceImpl implements WarrantyTypeService {
         return warrantyTypeDTO;
     }
 
-
+    /**
+     * warranty typ dto -> warranty type
+     */
     private WarrantyType warrantyTypeEntityModelMapper(WarrantyTypeDTO warrantyTypeDTO) {
         WarrantyType warrantyType = new WarrantyType();
         warrantyType.setId(warrantyTypeDTO.getId());

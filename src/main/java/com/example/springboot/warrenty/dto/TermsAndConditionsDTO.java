@@ -6,6 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+/**
+ * TermsAndConditionDTO
+ *
+ * @author Maneesha
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

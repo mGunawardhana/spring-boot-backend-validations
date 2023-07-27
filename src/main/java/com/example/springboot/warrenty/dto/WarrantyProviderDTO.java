@@ -6,7 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Date;
-
+/**
+ * WarrantyProviderDTO
+ *
+ * @author Maneesha
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data

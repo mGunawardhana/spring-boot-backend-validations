@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Interface for Receipt service layer.
+ * warranty service impl
  *
  * @author Maneesha
  */
@@ -27,6 +27,9 @@ public class WarrantyServiceImpl implements WarrantyService {
     @Autowired
     WarrantyRepository warrantyRepository;
 
+    /**
+     * save warranty type with checking validations
+     */
     @Override
     public void saveWarranty(WarrantyDTO warrantyDTO) {
         if (warrantyDTO != null) {
@@ -51,6 +54,9 @@ public class WarrantyServiceImpl implements WarrantyService {
         }
     }
 
+    /**
+     * update warranty type with checking validations
+     */
     @Override
     public void updateWarranty(WarrantyDTO warrantyDTO) {
         if (warrantyDTO != null) {
@@ -73,22 +79,43 @@ public class WarrantyServiceImpl implements WarrantyService {
         }
     }
 
+    /**
+     * deleting warranty
+     */
     @Override
     public void deleteWarranty(Integer code) {
         if (warrantyRepository.existsById(code)) {
-            warrantyRepository.deleteById(code);
+            Warranty warrantyToDelete = null;
+            for (Warranty warranty : warrantyRepository.findAll()) {
+                if (warranty.getId().equals(code)) {
+                    warrantyToDelete = warranty;
+                    break;
+                }
+            }
+
+            if (warrantyToDelete != null) {
+                warrantyToDelete.setStatus("0");
+                warrantyRepository.save(warrantyToDelete);
+            }
         } else {
-            throw new RuntimeException("No such a warranty !");
+            throw new RuntimeException("No such a warranty!");
         }
     }
 
+
+    /**
+     * get all warranty details
+     */
     @Override
     public List<?> getAllWarrantyDetails() {        //TODO fix the bug here ....
 
-        return   warrantyRepository.findAll().stream().map(this::warrantyDTOModelMapper).toList();
+        return warrantyRepository.findAll().stream().map(this::warrantyDTOModelMapper).toList();
 //        return warrantyRepository.getAllWarrantyDetailsWithTermsAndConditions().stream().map(this::warrantyDTOModelMapper).toList();
     }
 
+    /**
+     * warranty type -> warranty dto
+     */
     private WarrantyDTO warrantyDTOModelMapper(Warranty warranty) {
         WarrantyDTO warrantyDTO = new WarrantyDTO();
         warrantyDTO.setId(warranty.getId());
@@ -118,6 +145,9 @@ public class WarrantyServiceImpl implements WarrantyService {
     }
 
 
+    /**
+     * warranty dto -> warranty
+     */
     private Warranty warrantyEntityModelMapper(WarrantyDTO warrantyDTO) {
         log.info("warranty service DTO {}", warrantyDTO);
         Warranty warranty = new Warranty();

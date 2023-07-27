@@ -8,7 +8,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-
+/**
+ * terms and condition entity
+ *
+ * @author Maneesha
+ */
 @Entity
 @Data
 @AllArgsConstructor

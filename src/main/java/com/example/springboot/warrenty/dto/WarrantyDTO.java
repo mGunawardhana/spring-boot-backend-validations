@@ -9,7 +9,7 @@ import lombok.ToString;
 import java.util.List;
 
 /**
- * Interface for Receipt service layer.
+ * WarrantyDTO
  *
  * @author Maneesha
  */
