@@ -38,13 +38,17 @@ public class TermsAndConditions {
     @Column(name = "status_code")
     private String status;
 
+    @Column(name = "warranty_id")
+    private Integer warrantyId;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @ManyToOne
-    @JoinColumn(name="warranty_id",referencedColumnName = "id")
-    private Warranty warranty;
+
+//    @ManyToOne
+//    @JoinColumn(name="warranty_id",referencedColumnName = "id")
+//    private Warranty warranty;
 
 }

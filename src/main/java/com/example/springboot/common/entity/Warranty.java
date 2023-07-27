@@ -56,6 +56,6 @@ public class Warranty {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @OneToMany(mappedBy = "warranty",cascade = CascadeType.ALL)
-    private List<TermsAndConditions> termsAndConditions;
+//    @OneToMany(mappedBy = "warranty",cascade = CascadeType.ALL)
+//    private List<TermsAndConditions> termsAndConditions;
 }

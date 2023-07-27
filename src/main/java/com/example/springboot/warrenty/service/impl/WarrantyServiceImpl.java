@@ -3,12 +3,15 @@ package com.example.springboot.warrenty.service.impl;
 
 import com.example.springboot.common.entity.TermsAndConditions;
 import com.example.springboot.common.entity.Warranty;
+import com.example.springboot.common.repository.TermsAndConditionsRepository;
 import com.example.springboot.common.repository.WarrantyRepository;
+import com.example.springboot.warrenty.dto.TermsAndConditionsDTO;
 import com.example.springboot.warrenty.dto.WarrantyDTO;
 import com.example.springboot.warrenty.service.WarrantyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +24,15 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 public class WarrantyServiceImpl implements WarrantyService {
 
 
     @Autowired
     WarrantyRepository warrantyRepository;
+
+    @Autowired
+    TermsAndConditionsRepository termsAndConditionsRepository;
 
     /**
      * save warranty type with checking validations
@@ -33,24 +40,30 @@ public class WarrantyServiceImpl implements WarrantyService {
     @Override
     public void saveWarranty(WarrantyDTO warrantyDTO) {
         if (warrantyDTO != null) {
-            if (warrantyDTO.getWarrantyType() == null || warrantyDTO.getWarrantyProvider() == null || warrantyDTO.getWarrantyCode() == null || warrantyDTO.getWarrantyName() == null || warrantyDTO.getWarrantyDescription() == null || warrantyDTO.getWarrantyDuration() == null || warrantyDTO.getTermsAndConditions() == null || warrantyDTO.getWarrantyType().isEmpty() || warrantyDTO.getWarrantyProvider().isEmpty() || warrantyDTO.getWarrantyCode().isEmpty() || warrantyDTO.getWarrantyName().isEmpty() || warrantyDTO.getWarrantyDescription().isEmpty() || warrantyDTO.getWarrantyDuration().isEmpty() || warrantyDTO.getTermsAndConditions().isEmpty()) {
+            if (warrantyDTO.getWarrantyType() == null || warrantyDTO.getWarrantyProvider() == null || warrantyDTO.getWarrantyCode() == null || warrantyDTO.getWarrantyName() == null || warrantyDTO.getWarrantyDescription() == null || warrantyDTO.getWarrantyDuration() == null || warrantyDTO.getWarrantyType().isEmpty() || warrantyDTO.getWarrantyProvider().isEmpty() || warrantyDTO.getWarrantyCode().isEmpty() || warrantyDTO.getWarrantyName().isEmpty() || warrantyDTO.getWarrantyDescription().isEmpty() || warrantyDTO.getWarrantyDuration().isEmpty()) {
+                log.warn("warranty arguments cannot be null or empty.");
                 throw new IllegalArgumentException("warranty arguments cannot be null or empty.");
             } else {
-                for (TermsAndConditions termsAndConditions : warrantyDTO.getTermsAndConditions()) {
-                    if (termsAndConditions.getId() == null || termsAndConditions.getTerm() == null || termsAndConditions.getConditions() == null || termsAndConditions.getId().describeConstable().isEmpty() || termsAndConditions.getTerm().isEmpty() || termsAndConditions.getConditions().isEmpty()) {
-                        throw new IllegalArgumentException("terms and conditions cannot be null or empty.");
+                Warranty save = warrantyRepository.save(warrantyEntityModelMapper(warrantyDTO));
+                if (save.getId() != null || save.getWarrantyCode() != null) {
+                    for (TermsAndConditionsDTO termsAndConditionsDTO : warrantyDTO.getTermsAndConditions()) {
+                        TermsAndConditions termsAndConditions = new TermsAndConditions();
+                        termsAndConditions.setId(termsAndConditionsDTO.getId());
+                        termsAndConditions.setTerm(termsAndConditionsDTO.getTerm());
+                        termsAndConditions.setConditions(termsAndConditionsDTO.getConditions());
+                        termsAndConditions.setStatus("1");
+                        termsAndConditions.setWarrantyId(save.getId());
+                        termsAndConditionsRepository.save(termsAndConditions);
+                        log.info("termsAndConditions Saved! {} ", termsAndConditions);
                     }
-                }
-                if (warrantyRepository.existsById(Math.toIntExact(warrantyDTO.getId()))) {
-                    log.info("Already have this id {}", warrantyDTO.getId());
-                    throw new RuntimeException("Already exists this warranty! " + warrantyDTO.getId());
                 } else {
-                    log.info("warranty saved successfully - !" + warrantyDTO.getId());
-                    warrantyRepository.save(warrantyEntityModelMapper(warrantyDTO));
+                    log.warn("id or warrantyCode cannot be null or empty.");
+                    throw new RuntimeException("id or warrantyCode cannot be null or empty.");
                 }
             }
         } else {
-            throw new RuntimeException("warrantyDTO cannot be null!");
+            log.warn("terms and condition object cannot be null!");
+            throw new RuntimeException("terms and condition object cannot be null!");
         }
     }
 
@@ -60,14 +73,14 @@ public class WarrantyServiceImpl implements WarrantyService {
     @Override
     public void updateWarranty(WarrantyDTO warrantyDTO) {
         if (warrantyDTO != null) {
-            if (warrantyDTO.getWarrantyType() == null || warrantyDTO.getWarrantyProvider() == null || warrantyDTO.getWarrantyCode() == null || warrantyDTO.getWarrantyName() == null || warrantyDTO.getWarrantyDescription() == null || warrantyDTO.getWarrantyDuration() == null || warrantyDTO.getTermsAndConditions() == null || warrantyDTO.getWarrantyType().isEmpty() || warrantyDTO.getWarrantyProvider().isEmpty() || warrantyDTO.getWarrantyCode().isEmpty() || warrantyDTO.getWarrantyName().isEmpty() || warrantyDTO.getWarrantyDescription().isEmpty() || warrantyDTO.getWarrantyDuration().isEmpty() || warrantyDTO.getTermsAndConditions().isEmpty()) {
+            if (warrantyDTO.getWarrantyType() == null || warrantyDTO.getWarrantyProvider() == null || warrantyDTO.getWarrantyCode() == null || warrantyDTO.getWarrantyName() == null || warrantyDTO.getWarrantyDescription() == null || warrantyDTO.getWarrantyDuration() == null || warrantyDTO.getWarrantyType().isEmpty() || warrantyDTO.getWarrantyProvider().isEmpty() || warrantyDTO.getWarrantyCode().isEmpty() || warrantyDTO.getWarrantyName().isEmpty() || warrantyDTO.getWarrantyDescription().isEmpty() || warrantyDTO.getWarrantyDuration().isEmpty()) {
                 throw new IllegalArgumentException("warranty arguments cannot be null or empty.");
             } else {
-                for (TermsAndConditions termsAndConditions : warrantyDTO.getTermsAndConditions()) {
-                    if (termsAndConditions.getId() == null || termsAndConditions.getTerm() == null || termsAndConditions.getConditions() == null || termsAndConditions.getId().describeConstable().isEmpty() || termsAndConditions.getTerm().isEmpty() || termsAndConditions.getConditions().isEmpty()) {
-                        throw new IllegalArgumentException("terms and conditions cannot be null or empty.");
-                    }
-                }
+//                for (TermsAndConditions termsAndConditions : warrantyDTO.getTermsAndConditions()) {
+//                    if (termsAndConditions.getId() == null || termsAndConditions.getTerm() == null || termsAndConditions.getConditions() == null || termsAndConditions.getId().describeConstable().isEmpty() || termsAndConditions.getTerm().isEmpty() || termsAndConditions.getConditions().isEmpty()) {
+//                        throw new IllegalArgumentException("terms and conditions cannot be null or empty.");
+//                    }
+//                }
                 if (warrantyRepository.existsById(Math.toIntExact(warrantyDTO.getId()))) {
                     warrantyRepository.save(warrantyEntityModelMapper(warrantyDTO));
                 } else {
@@ -127,6 +140,7 @@ public class WarrantyServiceImpl implements WarrantyService {
         warrantyDTO.setWarrantyDuration(warranty.getWarrantyDuration());
         warrantyDTO.setStatus(warranty.getStatus());
 
+
         //TODO fix the bug here ....
 //
 //        List<TermsAndConditions> termsAndConditionsDTOList = new ArrayList<>();
@@ -140,7 +154,6 @@ public class WarrantyServiceImpl implements WarrantyService {
 //            termsAndConditionsDTOList.add(termsAndConditions1);
 //        }
 
-        warrantyDTO.setTermsAndConditions(warranty.getTermsAndConditions());
         return warrantyDTO;
     }
 
@@ -151,7 +164,7 @@ public class WarrantyServiceImpl implements WarrantyService {
     private Warranty warrantyEntityModelMapper(WarrantyDTO warrantyDTO) {
         log.info("warranty service DTO {}", warrantyDTO);
         Warranty warranty = new Warranty();
-        warranty.setId(warrantyDTO.getId());
+//        warranty.setId(warrantyDTO.getId());
         warranty.setWarrantyType(warrantyDTO.getWarrantyType());
         warranty.setWarrantyProvider(warrantyDTO.getWarrantyProvider());
         warranty.setWarrantyCode(warrantyDTO.getWarrantyCode());
@@ -160,18 +173,8 @@ public class WarrantyServiceImpl implements WarrantyService {
         warranty.setWarrantyDuration(warrantyDTO.getWarrantyDuration());
         warranty.setStatus("1");
 
-        List<TermsAndConditions> terms = new ArrayList<>();
-        for (TermsAndConditions termsAndConditionsDTO : warrantyDTO.getTermsAndConditions()) {
-            log.info("terms and conditions {}", termsAndConditionsDTO);
-            TermsAndConditions termsAndConditions = new TermsAndConditions();
-            termsAndConditions.setId(termsAndConditionsDTO.getId());
-            termsAndConditions.setTerm(termsAndConditionsDTO.getTerm());
-            termsAndConditions.setConditions(termsAndConditionsDTO.getConditions());
-            termsAndConditions.setStatus("1");
-            termsAndConditions.setWarranty(warranty);
-            terms.add(termsAndConditions);
-        }
-        warranty.setTermsAndConditions(terms);
+
+        //warranty.setTermsAndConditions(terms);
         return warranty;
     }
 

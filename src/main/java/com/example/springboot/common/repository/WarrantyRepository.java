@@ -32,9 +32,7 @@ public interface WarrantyRepository extends JpaRepository<Warranty, Integer> {
             "       GROUP_CONCAT(tac.term_condition) AS conditions\n" +
             "FROM warranty\n" +
             "         LEFT JOIN terms_and_conditions tac ON warranty.id = tac.warranty_id\n" +
-            "GROUP BY warranty.id;\n" +
-            "\n" +
-            "SELECT * FROM warranty",nativeQuery = true)
+            "GROUP BY warranty.id",nativeQuery = true)
     List<Warranty> getAllWarrantyDetailsWithTermsAndConditions();
 
 }
